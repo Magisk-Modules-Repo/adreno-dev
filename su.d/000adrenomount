@@ -1,0 +1,10 @@
+#!/system/bin/sh
+# chmod -R 755 /su/su.d
+#
+# Systemless Adreno Driver Mounts
+# osm0sis @ xda-developers
+
+for i in `find /su/vendor -type f | cut -d/ -f3-`; do
+  mount -o bind /su/$i /system/$i;
+done;
+
