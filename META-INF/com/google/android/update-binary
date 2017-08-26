@@ -118,9 +118,14 @@ if [ "$suimg" ]; then
     */magisk*) magisk=/$modname/system;;
   esac;
 else
-  ui_print " ";
-  ui_print "Error: Systemless root not detected!";
-  abort;
+  mnt=$(dirname `find /data -name supersu_is_here`);
+  if [ -e "$mnt" ]; then
+    bindsbin=1;
+  else
+    ui_print " ";
+    ui_print "Error: Systemless root not detected!";
+    abort;
+  fi;
 fi;
 
 ui_print " ";
@@ -137,11 +142,11 @@ cp -rf system/* $mnt$magisk;
 set_perm_recursive 0 0 755 644 $mnt$magisk/vendor;
 set_perm 0 2000 755 $mnt$magisk/vendor $mnt$magisk/vendor/firmware $mnt$magisk/vendor/lib $mnt$magisk/vendor/lib/egl;
 
-if [ "$mnt" == "/su" ]; then
+if [ "$mnt" == "/su" -o "$bindsbin" ]; then
   ui_print " ";
-  ui_print "Installing 000adrenomount script to /su/su.d ...";
-  cp -rf su.d/* /su/su.d;
-  set_perm 0 0 755 /su/su.d/000adrenomount;
+  ui_print "Installing 000adrenomount script to $mnt/su.d ...";
+  cp -rf su.d/* $mnt/su.d;
+  set_perm 0 0 755 $mnt/su.d/000adrenomount;
 elif [ "$magisk" ]; then
   ui_print " ";
   ui_print "Installing Magisk configuration files ...";
