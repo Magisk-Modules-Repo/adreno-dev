@@ -4,7 +4,7 @@
 # Systemless Adreno Driver Mounts
 # osm0sis @ xda-developers
 
-sumnt=$(ls /su || ls /sbin/supersu) 2>/dev/null;
+sumnt=$(find / -maxdepth 2 | grep -E '^/su$|^/sbin/supersu$');
 
 for i in `find $sumnt/vendor -type f | cut -d/ -f3-`; do
   mount -o bind $sumnt/$i /system/$i;
