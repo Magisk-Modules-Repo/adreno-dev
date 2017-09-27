@@ -68,6 +68,7 @@ abort() {
   ui_print " ";
   ui_print "Script will now exit...";
   ui_print " ";
+  umount /system;
   umount /data;
   umount /cache;
   exit 1;
@@ -94,13 +95,15 @@ fi;
 
 ui_print " ";
 ui_print "Mounting...";
+umount /system 2>/dev/null;
+mount -o ro -t auto /system;
 mount /data;
 mount /cache;
 suimg=$(ls /data/magisk_merge.img || ls /data/su.img || ls /cache/su.img || ls /data/magisk.img || ls /cache/magisk.img) 2>/dev/null;
 mnt=$dev/$(basename $suimg .img);
 if [ "$suimg" ]; then
   mount_su;
-  if [ ! -e /su/su.d/000adrenomount -a ! -e /magisk/adreno-dev/module.prop ]; then
+  if [ ! -e /su/su.d/000adrenomount -a ! -e /magisk/adreno-dev/module.prop -a "$(which e2fsck)" ]; then
     # make room for adreno which may not fit in su.img if there are other mods
     umount $mnt;
     payload_size_check "$DIR/$adreno" "system/*";
@@ -165,6 +168,7 @@ fi;
 ui_print " ";
 ui_print "Unmounting...";
 umount $mnt;
+umount /system;
 umount /data;
 umount /cache;
 

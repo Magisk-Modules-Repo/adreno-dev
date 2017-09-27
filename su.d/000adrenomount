@@ -6,7 +6,7 @@
 
 sumnt=$(find / -maxdepth 2 | grep -E '^/su$|^/sbin/supersu$');
 
-for i in `find $sumnt/vendor -type f | cut -d/ -f3-`; do
+for i in $(find $sumnt/vendor -type f | grep -o 'vendor/.*$'); do
   mount -o bind $sumnt/$i /system/$i;
 done;
 
