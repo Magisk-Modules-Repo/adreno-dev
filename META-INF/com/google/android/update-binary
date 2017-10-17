@@ -99,6 +99,12 @@ umount /system 2>/dev/null;
 mount -o ro -t auto /system;
 mount /data;
 mount /cache;
+
+# Magisk clean flash support
+if [ -e /data/magisk -a ! -e /data/magisk.img ]; then
+  /system/bin/make_ext4fs -l 64M /data/magisk.img;
+fi;
+
 suimg=$(ls /data/magisk_merge.img || ls /data/su.img || ls /cache/su.img || ls /data/magisk.img || ls /cache/magisk.img) 2>/dev/null;
 mnt=$dev/$(basename $suimg .img);
 if [ "$suimg" ]; then
@@ -121,6 +127,7 @@ if [ "$suimg" ]; then
     */magisk*) magisk=/$modname/system;;
   esac;
 else
+  # SuperSU BINDSBIN support
   mnt=$(dirname `find /data -name supersu_is_here`);
   if [ -e "$mnt" ]; then
     bindsbin=1;
@@ -158,7 +165,7 @@ elif [ "$magisk" ]; then
   cp -f module.prop $mnt/$modname/;
   touch $mnt/$modname/auto_mount;
   chcon -hR 'u:object_r:system_file:s0' "$mnt/$modname";
-  if $BOOTMODE; then
+  if $BOOTMODE && [ "$suimg" == "/data/magisk_merge.img" ]; then
     mkdir -p /magisk/$modname;
     touch /magisk/$modname/update;
     cp -f module.prop /magisk/$modname/;
