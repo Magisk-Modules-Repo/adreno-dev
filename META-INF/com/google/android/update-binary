@@ -14,11 +14,12 @@ if $BOOTMODE; then
   OUTFD=/proc/self/fd/0;
   dev=/dev;
   devtmp=/dev/tmp;
-  if [ ! -f /data/$adb/magisk_merge.img ]; then
+  if [ ! -f /data/$adb/magisk_merge.img -a ! -e /data/adb/modules ]; then
     (/system/bin/make_ext4fs -b 4096 -l 64M /data/$adb/magisk_merge.img || /system/bin/mke2fs -b 4096 -t ext4 /data/$adb/magisk_merge.img 64M) >/dev/null;
   fi;
   test -e /magisk/.core/busybox && magiskbb=/magisk/.core/busybox;
   test -e /sbin/.core/busybox && magiskbb=/sbin/.core/busybox;
+  test -e /sbin/.magisk/busybox && magiskbb=/sbin/.magisk/busybox;
   test "$magiskbb" && export PATH="$magiskbb:$PATH";
 fi;
 
@@ -104,15 +105,15 @@ mount /data;
 mount /cache;
 
 # Magisk clean flash support
-if [ -e /data/$adb/magisk -a ! -e /data/$adb/magisk.img ]; then
+if [ -e /data/$adb/magisk -a ! -e /data/$adb/magisk.img -a ! -e /data/adb/modules ]; then
   make_ext4fs -b 4096 -l 64M /data/$adb/magisk.img || mke2fs -b 4096 -t ext4 /data/$adb/magisk.img 64M;
 fi;
 
-suimg=$(ls /data/$adb/magisk_merge.img || ls /data/su.img || ls /cache/su.img || ls /data/$adb/magisk.img || ls /cache/magisk.img) 2>/dev/null;
+suimg=$((ls /data/$adb/magisk_merge.img || ls /data/su.img || ls /cache/su.img || ls /data/$adb/magisk.img || ls /cache/magisk.img) 2>/dev/null);
 mnt=$devtmp/$(basename $suimg .img);
 if [ "$suimg" ]; then
   mount_su;
-  if [ ! -e /su/su.d/000adrenomount -a ! -e /magisk/adreno-dev/module.prop -a "$(which e2fsck)" ]; then
+  if [ ! -e /su/su.d/000adrenomount -a ! -e /magisk/adreno-dev/module.prop -a ! -e /sbin/.core/img/adreno-dev/module.prop -a ! -e /sbin/.magisk/img/adreno-dev/module.prop -a "$(which e2fsck)" ]; then
     # make room for adreno which may not fit in su.img if there are other mods
     umount $mnt;
     payload_size_check "$DIR/$adreno" "system/*";
@@ -134,6 +135,9 @@ else
   mnt=$(dirname `find /data -name supersu_is_here | head -n1` 2>/dev/null);
   if [ -e "$mnt" ]; then
     bindsbin=1;
+  elif [ -e "/data/adb/modules" ]; then
+    mnt=/data/adb/modules_update;
+    magisk=/$modname/system;
   else
     ui_print " ";
     ui_print "Error: Systemless root not detected!";
@@ -168,8 +172,10 @@ elif [ "$magisk" ]; then
   cp -f module.prop $mnt/$modname/;
   touch $mnt/$modname/auto_mount;
   chcon -hR 'u:object_r:system_file:s0' "$mnt/$modname";
-  if $BOOTMODE && [ "$suimg" == "/data/$adb/magisk_merge.img" ]; then
+  if $BOOTMODE; then
     test -e /magisk && imgmnt=/magisk || imgmnt=/sbin/.core/img;
+    test -e /sbin/.magisk/img && imgmnt=/sbin/.magisk/img;
+    test -e /data/adb/modules && imgmnt=/data/adb/modules;
     mkdir -p "$imgmnt/$modname";
     touch "$imgmnt/$modname/update";
     cp -f module.prop "$imgmnt/$modname/";

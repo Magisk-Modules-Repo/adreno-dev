@@ -1,7 +1,7 @@
 id=adreno-dev
 name=Adreno GPU Developer Preview Drivers
 version=#version#
-versionCode=14
+versionCode=15
 author=osm0sis @ xda-developers
 description=Replace ROM Adreno GPU drivers from Qualcomm
 support=https://forum.xda-developers.com/google-nexus-5/themes-apps/marshmallow-qualcomm-adreno-gpu-drivers-t3228002/post67117557#post67117557
