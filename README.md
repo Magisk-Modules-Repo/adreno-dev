@@ -4,7 +4,7 @@
 
 ### Links
 * [GitHub](https://github.com/Magisk-Modules-Repo/Adreno-Systemless-Installer)
-* [Adreno Packages](https://basketbuild.com/devs/osm0sis/adreno)
+* [Adreno Packages](https://androidfilehost.com/?w=files&flid=312875)
 * [Support](https://forum.xda-developers.com/google-nexus-5/themes-apps/marshmallow-qualcomm-adreno-gpu-drivers-t3228002/post67117557#post67117557)
 * [Sponsor](https://github.com/sponsors/osm0sis)
 * [Donate](https://forum.xda-developers.com/donatetome.php?u=4544860)
