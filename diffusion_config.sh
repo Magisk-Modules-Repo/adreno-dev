@@ -5,15 +5,9 @@ INST_NAME="Adreno Systemless Installer Script";
 AUTH_NAME="osm0sis @ xda-developers";
 
 USE_ARCH=false
-USE_ZIP_OPTS=true
+USE_ZIP_OPTS=false
 
-custom_zip_opts() {
-  if [ "$FORCE_SYSTEM" ]; then
-    ui_print " ";
-    ui_print "Error: System install not allowed!";
-    abort;
-  fi;
-
+custom_setup() {
   test ! -f "$DIR/Adreno-Nexus"*.zip && DIR=/sdcard;
 
   # go local and find our target zip
@@ -27,6 +21,10 @@ custom_zip_opts() {
     abort;
   fi;
   cd /dev/tmp/$MODID;
+}
+
+custom_zip_opts() {
+  return # stub
 }
 
 custom_target() {
