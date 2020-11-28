@@ -101,9 +101,17 @@ payload_size_check() {
   done;
   reqSizeM=0;
   for entry in $(unzip -l "$zip" 2>/dev/null | grep -f grepfile.tmp | tail -n +4 | awk '{ print $1 }'); do
-    test $entry != "--------" && reqSizeM=$((reqSizeM + entry)) || break;
+    if [ $entry != "--------" ]; then
+      reqSizeM=$((reqSizeM + entry));
+    else
+      break;
+    fi;
   done;
-  test $reqSizeM -lt 1048576 && reqSizeM=1 || reqSizeM=$((reqSizeM / 1048576));
+  if [ $reqSizeM -lt 1048576 ]; then
+    reqSizeM=1;
+  else
+    reqSizeM=$((reqSizeM / 1048576));
+  fi;
   rm -f grepfile.tmp;
 }
 
