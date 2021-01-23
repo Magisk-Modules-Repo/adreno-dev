@@ -8,7 +8,7 @@ USE_ARCH=false
 USE_ZIP_OPTS=false
 
 custom_setup() {
-  test ! -f "$DIR/Adreno-Nexus"*.zip && DIR=/sdcard;
+  [ ! -f "$DIR/Adreno-Nexus"*.zip ] && DIR=/sdcard;
 
   # go local and find our target zip
   cd "$DIR";
@@ -31,7 +31,7 @@ custom_target() {
   # make room on new installs for adreno which may not fit in su.img/magisk.img if there are other mods
   if [ "$SUIMG" -a ! -e /dev/tmp/su/su.d/000adrenomount -a ! -e /su/su.d/000adrenomount -a ! -e /dev/tmp/magisk/adreno-dev/module.prop -a ! -e /magisk/adreno-dev/module.prop -a ! -e /sbin/.core/img/adreno-dev/module.prop -a ! -e /sbin/.magisk/img/adreno-dev/module.prop -a "$(which e2fsck)" ]; then
     umount $MNT;
-    test "$LOOP" && losetup -d $LOOP;
+    [ "$LOOP" ] && losetup -d $LOOP;
     payload_size_check "$DIR/$ADRENO" system;
     target_size_check $SUIMG;
     if [ "$reqSizeM" -gt "$curFreeM" ]; then
