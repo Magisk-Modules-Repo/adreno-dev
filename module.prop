@@ -1,7 +1,7 @@
 id=adreno-dev
 name=Adreno GPU Developer Preview Drivers
 version=#version#
-versionCode=31
+versionCode=32
 author=osm0sis @ xda-developers
 description=Replace ROM Adreno GPU drivers from Qualcomm
 updateJson=https://raw.githubusercontent.com/Magisk-Modules-Repo/adreno-dev/master/update.json
