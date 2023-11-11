@@ -5,6 +5,6 @@ versionCode=34
 author=osm0sis @ xda-developers
 description=Replace ROM Adreno GPU drivers from Qualcomm
 updateJson=https://raw.githubusercontent.com/Magisk-Modules-Repo/adreno-dev/master/update.json
-support=https://forum.xda-developers.com/t/marshmallow-qualcomm-adreno-gpu-drivers-for-nexus-5-updated-09-12-15.3228002/post-67117557
+support=https://xdaforums.com/t/marshmallow-qualcomm-adreno-gpu-drivers-for-nexus-5-updated-09-12-15.3228002/post-67117557
 donate=https://www.paypal.me/osm0sis
 template=1500
